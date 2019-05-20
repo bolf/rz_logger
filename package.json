@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dateformat": "^3.0.3",
     "express": "^4.17.0",
-    "mongoose": "^5.5.9"
+    "mongoose": "^5.5.10"
   }
 }

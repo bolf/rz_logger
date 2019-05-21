@@ -13,7 +13,7 @@ const logSchema = new mongoose.Schema({
 const LogModel = mongoose.model("Log", logSchema);
 
 router.get("/", async (req, res) => {
-  if (!(req.body.eventType && req.body.eventDate)) {
+  if (!(req.query.eventType && req.query.eventDate)) {
     return res
       .status(400)
       .send(
@@ -23,9 +23,9 @@ router.get("/", async (req, res) => {
 
   try {
     const logs = await LogModel.find({
-      eventType: req.body.eventType,
+      eventType: req.query.eventType,
       eventDate: {
-        $gte: Date.parse(dateFormat(req.body.eventDate, "isoUtcDateTime"))
+        $gte: Date.parse(dateFormat(req.query.eventDate, "isoUtcDateTime"))
       }
     }).sort("eventDate");
     res.send(logs);
@@ -39,6 +39,15 @@ router.post("/", async (req, res) => {
     var log = new LogModel(req.body);
     log = await log.save();
     res.send(log._id);
+  } catch (e) {
+    res.status(400).send("что-то пошло не так..");
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    const movie = await LogModel.deleteOne({ _id: req.params.id });
+    res.send(movie);
   } catch (e) {
     res.status(400).send("что-то пошло не так..");
   }
